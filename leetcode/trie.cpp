@@ -92,7 +92,7 @@ class Trie{
         string nextWord = word.substr(1);
 
         //如果是最后一个单词，则减去词频
-        if (word.size() == 0 && root->childNodes[k]->freq > 0)
+        if (word.size() == 1 && root->childNodes[k]->freq > 0)
             root->childNodes[k]->freq--;
 
         //删除途经节点
@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
     {
         Trie *trie = new Trie();
 
-        vector<string> v={"cpple","banana","pineapple","cpple"};
+        string s[4]={"cpple","banana","pineapple","cpple"};
+        vector<string> v(s,s+4);
         for (int i=0;i<v.size();i++)
         {
 
@@ -116,7 +117,11 @@ int main(int argc, char *argv[])
         }
         int a=trie->search("cpple");
         int b=0;
-        // printf(a);
+        cout<<"1st "<<a<<endl;
+        trie->DeleteTrieNode(trie->root,"cpple",0);
+        int c=trie->search("cpple");
+        cout<<"2nd "<<c<<endl;
+
         // printf("耗费时间:{0}", System.time());
 
         // printf("\n\ngo 出现的次数为:{0}\n\n", trie.WordCount("go"));

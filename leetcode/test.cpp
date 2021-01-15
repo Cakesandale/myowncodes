@@ -193,7 +193,7 @@ public:
     }
 
     //315
-    vector<int> countSmaller(vector<int>& nums) {
+    vector<int> countSmaller1(vector<int>& nums) {
         vector<int> re;
         vector<int> num2;
         for(int i= nums.size()-1;i>=0;i--){
@@ -238,6 +238,92 @@ public:
         // return index;
     }
 
+    struct BST{
+        BST *left,*right;
+        int val,sum,dup=1;
+        BST(int a,int b):val(a),sum(b){};
+    };
+    vector<int> countSmaller(vector<int>& nums) {
+        size_t n=nums.size();
+        vector<int> re(n,0);
+        BST *root=NULL;
+        for(int i=n-1;i>=0;i--){
+            root=insert(re,nums[i],i,root,0);
+        }
+        return re;
+    }
+    BST* insert(vector<int>& re,int m, int i, BST* root, int presum){
+        if(root==NULL){
+            root=new BST(m,0);
+            re[i]=presum;
+        }else if(root->val==m){
+            root->dup++;
+            re[i]=root->sum+presum;
+        }else if(root->val > m){
+            root->sum++;
+            root->left=insert(re,m,i,root->left,presum);
+        }else{
+            root->right=insert(re,m,i,root->right,presum+root->sum+root->dup);
+        }
+        return root;
+    }
+
+//321
+vector<int> maxNumber(vector<int>& nums1, vector<int>& nums2, int k) {
+        int n=nums1.size();
+        int m=nums2.size();
+        vector<int> re(k,0);
+        for(int i=max(0,k-m);i<=k&&i<=n;i++){
+            vector<int> candi=merge(getmax(nums1,i),getmax(nums2,k-i));
+            if(greater(candi,re)) re=candi;
+        }
+        return re;
+    }
+    vector<int> getmax(vector<int>& nums,int k){
+        vector<int> ans(k,0);
+        size_t n=nums.size();
+        int i=0;
+        for(int j=0;j<n;j++){
+            while(i>0 && n-j+i>k && nums[j]>ans[i-1]) i--;
+            if(i<k) ans[i++]=nums[j];
+        }
+        return ans;
+    }
+    bool greater(vector<int> a1,vector<int> a2){
+        size_t n=a1.size();
+        bool flag=false;
+        for(int i=0;i<n;i++){
+            if(a1[i]>a2[i]){
+                flag=true;
+                break;
+            }else if(a1[i]<a2[i]){
+                flag=false;
+                break;
+            }
+        }
+        return flag;
+    }
+    vector<int> merge(vector<int> a1, vector<int> a2){
+        if(a1.size()==0) return a2;
+        else if(a2.size()==0) return a1;
+        int i=0,j=0;
+        vector<int> re;
+        while(i<a1.size() && j<a2.size()){
+            if(a1[i]>=a2[j])
+                re.push_back(a1[i++]);
+            else
+                re.push_back(a2[j++]);
+        }
+        while(i<a1.size()){
+            re.push_back(a1[i++]);
+        }
+        while(j<a2.size()){
+            re.push_back(a2[j++]);
+        }
+        return re;
+    }
+
+    
 };
 int main(){
     Solution *s=new Solution();
@@ -245,14 +331,17 @@ int main(){
 
     // s->summaryRanges(v);
     // s->isAdditiveNumber("101");
-    int x[12]={0,1,0,2,1,0,1,3,2,1,2,1};
-    vector<int> a(x,x+12);
+    // int x[4]={186,419,83,408};
+    int x[4]={186,419,83,408};
+    vector<int> a(x,x+4);
     // s->largestRectangleArea(a);
-    s->trap(a);
+    // s->trap(a);
 
-    int x1[4]={5,2,6,1};
-    vector<int> b(x1,x1+4);
-    s->countSmaller(b);
+    int x1[6]={6,0,4,5,8,3};
+    vector<int> b(x1,x1+3);
+    // s->countSmaller(b);
+
+    s->lengthOfLIS(a);
 
 }
 

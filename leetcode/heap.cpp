@@ -55,7 +55,27 @@ int pop_max(HeapStruct* hp){
     return maxitm;
 }
 
+vector<int> singlequeue(int num[]){
+    vector<int> ans;
+    int n=sizeof(num);
+    stack<int> stk;
+    for(int i=n-1;i>=0;i--){
+        int m=0;
+        while(!stk.empty() && num[stk.top()]<=num[i]){
+            stk.pop();
+            m++;
+        }
+        m=stk.empty()? 0:stk.top()-i;
+        ans.push_back(m);
+        stk.push(i);
+    }
+    return ans;
+}
+
 int main(){
+    int x[]={73,74,75, 71, 69, 72, 76, 73};
+    vector<int> a=singlequeue(x);
+
     HeapStruct *hp=new HeapStruct(10);
     int m[6]={4,7,10,3,6,1};
     for(int x:m){

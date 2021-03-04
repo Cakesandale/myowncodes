@@ -5,6 +5,7 @@
 #include <queue>
 #include <set>
 #include <stack>
+#include <unordered_map>
 using namespace std;
 
 class Solution {
@@ -323,8 +324,64 @@ vector<int> maxNumber(vector<int>& nums1, vector<int>& nums2, int k) {
         return re;
     }
 
+vector<int> combine(vector<int> &a, int m, vector<int> &b,int n){
+    int N=a.size();
+    m=m-1;
+    n=n-1;
+    for(int i=N-1;i>=0;i--){
+        if(m<0){
+            a[i]=b[n--];
+            continue;
+        }
+        if(n<0){
+            a[i]=a[m--];
+            continue;
+        }
+        if(a[m]<b[n]){
+            a[i]=b[n--];
+        }else{
+            a[i]=a[m--];
+        }
+    }
+    return a;
+}
     
 };
+
+bool checkInclusion(string s1, string s2) {
+        int m=s1.size();
+        int n = s2.size();
+
+        if(m>n) return false;
+        unordered_map<char,int> t,win;
+        for(char c:s1)
+            t[c]++;
+        int left=0, right = 0;
+        int cnt=0;
+        while(right<n){
+            char c=s2[right];
+            right++;
+            if(t.count(c)){
+                win[c]++;
+                cnt++;
+            }
+            while(right-left>=m){
+                if(cnt=t.size())
+                    return true;
+                left++;
+                char d=s2[left];
+                if(t.count(d)){
+                    if(win[d]==t[d])
+                        cnt--;
+                    win[d]--;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 int main(){
     Solution *s=new Solution();
     // s->removeInvalidParentheses(")(");
@@ -332,16 +389,16 @@ int main(){
     // s->summaryRanges(v);
     // s->isAdditiveNumber("101");
     // int x[4]={186,419,83,408};
-    int x[4]={186,419,83,408};
-    vector<int> a(x,x+4);
+    int x[6]={1,2,3,0,0,0};
+    vector<int> a(x,x+6);
     // s->largestRectangleArea(a);
     // s->trap(a);
 
-    int x1[6]={6,0,4,5,8,3};
+    int x1[3]={2,5,6};
     vector<int> b(x1,x1+3);
     // s->countSmaller(b);
 
-    s->lengthOfLIS(a);
+    s->combine(a,3,b,3);
 
 }
 
